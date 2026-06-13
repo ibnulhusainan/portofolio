@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ibnul Husainan | Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f5fa',
+                            100: '#d9e5f3',
+                            200: '#b8cedf',
+                            300: '#8db2cb',
+                            400: '#5c8eb2',
+                            500: '#346b93', // Elegant Muted Steel Blue
+                            600: '#255073', // Rich Classic Blue
+                            700: '#193954', // Dark Sapphire
+                            800: '#102538', // Deep Midnight Blue
+                            900: '#07131f', // Ultimate Midnight Navy
+                        },
+                        darkBg: '#090e17', // Elegant Deep Space Black/Blue
+                        darkCard: '#111823' // Premium Dark Sapphire Slate Card
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght=400;500;700&family=Inter:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Alpine.js for state management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .mono-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom sleek scrollbar matching the theme */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(9, 14, 23, 0.3);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(9, 14, 23, 0.9);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(52, 107, 147, 0.3);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(52, 107, 147, 0.6);
+        }
+    </style>
+</head>
+<body x-data="portfolioApp()" class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-200 transition-colors duration-500 min-h-screen flex flex-col antialiased">
+
+    <!-- Header / Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-lg bg-slate-50/75 dark:bg-darkBg/75 border-b border-slate-200/60 dark:border-brand-900/50 transition-colors duration-500">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo / Brand -->
+            <a href="#home" class="flex items-center space-x-3 group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500 to-brand-800 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-brand-500/10 group-hover:scale-105 transition-transform duration-300">
+                    IH
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-brand-500 transition-colors duration-300 text-base">Ibnul Husainan</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Full Stack Developer</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#about" class="text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">About</a>
+                <a href="#experience" class="text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">Experience</a>
+                <a href="#skills" class="text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">Skills</a>
+                <a href="#terminal" class="text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span> CLI Terminal
+                </a>
+                <a href="#contact" class="text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 hover:text-brand-500 dark:hover:text-brand-400 transition-colors">Contact</a>
+            </nav>
+
+            <!-- Actions (Theme Toggle & CTA) -->
+            <div class="flex items-center space-x-4">
+                <!-- Theme Toggle Button -->
+                <button @click="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-darkCard text-slate-600 dark:text-slate-400 hover:text-brand-500 dark:hover:text-brand-400 border border-slate-200 dark:border-brand-800/40 transition-all duration-300" aria-label="Toggle Theme">
+                    <i x-show="darkMode" class="fa-solid fa-sun text-lg"></i>
+                    <i x-show="!darkMode" class="fa-solid fa-moon text-lg"></i>
+                </button>
+
+                <!-- Minimal Elegant Contact Button -->
+                <a href="#contact" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 text-sm font-semibold text-white bg-brand-600 hover:bg-brand-500 rounded-xl transition-all duration-300 shadow-md shadow-brand-600/10 hover:shadow-brand-500/25 hover:-translate-y-0.5">
+                    Get in Touch
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden p-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-darkCard border border-slate-200 dark:border-brand-800/40 transition-colors">
+                    <i x-show="!mobileMenuOpen" class="fa-solid fa-bars text-lg"></i>
+                    <i x-show="mobileMenuOpen" class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-4" class="md:hidden bg-slate-50 dark:bg-darkBg border-b border-slate-200 dark:border-brand-800 px-4 py-4 space-y-3">
+            <a href="#about" @click="mobileMenuOpen = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-darkCard font-medium transition-all">About</a>
+            <a href="#experience" @click="mobileMenuOpen = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-darkCard font-medium transition-all">Work Experience</a>
+            <a href="#skills" @click="mobileMenuOpen = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-darkCard font-medium transition-all">Skills</a>
+            <a href="#terminal" @click="mobileMenuOpen = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-darkCard font-medium flex items-center gap-2 transition-all">
+                <span class="w-2 h-2 rounded-full bg-brand-500"></span> Terminal Simulator
+            </a>
+            <a href="#contact" @click="mobileMenuOpen = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-darkCard font-medium transition-all">Contact</a>
+            <a href="#contact" @click="mobileMenuOpen = false" class="block w-full text-center py-3 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold shadow-md transition-all">Contact Me</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative py-20 md:py-32 overflow-hidden flex-grow flex items-center">
+        <!-- Background Grid & Elegant Lights -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#1b2e4710_1px,transparent_1px),linear-gradient(to_bottom,#1b2e4710_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#346b9308_1px,transparent_1px),linear-gradient(to_bottom,#346b9308_1px,transparent_1px)] bg-[size:20px_30px] pointer-events-none"></div>
+        <div class="absolute top-1/4 left-10 w-96 h-96 bg-brand-500/5 dark:bg-brand-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-brand-700/5 dark:bg-brand-600/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                <!-- Hero Text -->
+                <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                    <div class="inline-flex items-center space-x-2.5 px-4 py-2 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 text-xs sm:text-sm font-semibold border border-brand-200/50 dark:border-brand-800/40 shadow-sm">
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
+                        </span>
+                        <span>Open for Freelance, Contract & Professional Remote Work</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15]">
+                        Building stable & <br class="hidden sm:block">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-brand-500 to-brand-300 dark:from-brand-300 dark:via-brand-400 dark:to-brand-100">
+                            maintainable backends
+                        </span>
+                    </h1>
+
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center lg:justify-start gap-3">
+                        Ibnul Husainan
+                        <span class="text-sm font-medium px-2.5 py-1 rounded bg-slate-200/50 dark:bg-darkCard text-brand-500 dark:text-brand-400 border border-slate-300 dark:border-brand-800/50">Full Stack Developer</span>
+                    </h2>
+
+                    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-400 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                        Over <strong class="text-slate-900 dark:text-white font-medium">5+ years</strong> of hands-on experience developing, troubleshooting, and modernizing business-critical web applications, keeping production stable with zero downtime.
+                    </p>
+
+                    <!-- Links & Actions -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-3">
+                        <a href="#contact" class="px-7 py-3.5 bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-500 hover:to-brand-600 text-white font-semibold rounded-xl shadow-lg shadow-brand-700/15 hover:shadow-brand-500/25 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                            Let's Collaborate
+                        </a>
+                        <a href="#experience" class="px-7 py-3.5 bg-white dark:bg-darkCard text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-brand-900/10 font-semibold rounded-xl border border-slate-200 dark:border-brand-800/50 hover:border-brand-500/55 transition-all duration-300 flex items-center gap-2">
+                            <i class="fa-solid fa-briefcase text-brand-500"></i>
+                            View Work History
+                        </a>
+                    </div>
+
+                    <!-- Social Channels -->
+                    <div class="flex items-center justify-center lg:justify-start gap-6 pt-6 text-slate-400 dark:text-slate-500">
+                        <a href="https://github.com/ibnulhusainan" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors text-2xl" title="Github">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/ibnulhusainan" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors text-2xl" title="LinkedIn">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </a>
+                        <a href="https://projects.id/ibnulhusainan" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors font-bold text-xs border border-slate-300 dark:border-brand-800/60 px-3.5 py-1.5 rounded-lg hover:border-brand-500 transition-all" title="Projects.id">
+                            Projects.id
+                        </a>
+                        <a href="https://www.fiverr.com/ibnulhusainan" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 transition-colors font-bold text-xs border border-slate-300 dark:border-brand-800/60 px-3.5 py-1.5 rounded-lg hover:border-brand-500 transition-all" title="Fiverr">
+                            Fiverr
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Elegant Terminal Preview -->
+                <div class="lg:col-span-5 w-full max-w-md mx-auto">
+                    <div class="bg-darkBg rounded-2xl shadow-2xl border border-brand-900/30 overflow-hidden transform hover:-translate-y-1 transition-transform duration-500">
+                        <!-- Terminal Bar -->
+                        <div class="bg-[#050911] px-5 py-3.5 flex items-center justify-between border-b border-brand-900/20">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-[#e06c75]/50"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#d19a66]/50"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#98c379]/50"></div>
+                            </div>
+                            <span class="text-[10px] font-semibold text-slate-500 tracking-wider mono-font">developer@ibnul-husainan: ~</span>
+                            <div class="w-4"></div>
+                        </div>
+                        <!-- Terminal Body -->
+                        <div class="p-6 text-xs text-brand-300 space-y-5 mono-font leading-relaxed">
+                            <div>
+                                <span class="text-slate-500">$</span> cat developer.json
+                            </div>
+                            <div class="text-slate-300 pl-4 border-l border-brand-800/40 space-y-1.5">
+                                <p>"{</p>
+                                <p class="pl-4">"name": <span class="text-brand-400">"Ibnul Husainan"</span>,</p>
+                                <p class="pl-4">"focus": [<span class="text-brand-400">"Backend Systems"</span>, <span class="text-brand-400">"API Design"</span>],</p>
+                                <p class="pl-4">"core_skills": [<span class="text-slate-400">"Go"</span>, <span class="text-slate-400">"PHP"</span>, <span class="text-slate-400">"NodeJS"</span>],</p>
+                                <p class="pl-4">"philosophy": <span class="text-brand-400">"Clean Code, High Uptime"</span></p>
+                                <p>"}"</p>
+                            </div>
+                            <div>
+                                <span class="text-slate-500">$</span> <span class="text-white">ping -c 1 system_status</span>
+                            </div>
+                            <div class="text-slate-400 text-[11px]">
+                                64 bytes from clean_architecture: time=0.035 ms <br>
+                                <span class="text-emerald-500 font-bold">✓ Production systems operational.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-slate-100/30 dark:bg-brand-900/5 border-y border-slate-200/40 dark:border-brand-900/20 transition-colors duration-500">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-20 space-y-4">
+                <span class="text-xs font-bold text-brand-500 dark:text-brand-400 uppercase tracking-widest block">Introduction</span>
+                <h2 class="text-3xl font-extrabold sm:text-4xl text-slate-900 dark:text-white tracking-tight">About Me</h2>
+                <div class="w-8 h-1 bg-brand-500 mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
+                <!-- Stat Cards (Left Side) -->
+                <div class="md:col-span-4 space-y-6">
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-brand-900/20 flex items-center justify-center text-brand-500 text-xl shadow-inner">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs text-slate-400 font-medium uppercase tracking-wider">Expertise</h3>
+                                <p class="text-base font-bold text-slate-800 dark:text-white">Backend Architect</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-brand-900/20 flex items-center justify-center text-brand-500 text-xl shadow-inner">
+                                <i class="fa-solid fa-server"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs text-slate-400 font-medium uppercase tracking-wider">Primary Stack</h3>
+                                <p class="text-base font-bold text-slate-800 dark:text-white">Go, PHP, Node.js</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-slate-50 dark:bg-brand-900/20 flex items-center justify-center text-brand-500 text-xl shadow-inner">
+                                <i class="fa-solid fa-database"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-xs text-slate-400 font-medium uppercase tracking-wider">Database Specialty</h3>
+                                <p class="text-base font-bold text-slate-800 dark:text-white">Optimized Relational SQL</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bio Text (Right Side) -->
+                <div class="md:col-span-8 bg-white dark:bg-darkCard rounded-3xl border border-slate-200/60 dark:border-brand-900/30 p-8 sm:p-10 shadow-sm space-y-6">
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Committed to Stable, Clean, and Long-Term Systems</h3>
+                    
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base font-light">
+                        I am a <strong class="text-brand-500 dark:text-brand-400 font-semibold">Full Stack Web Developer</strong> with 5+ years of experience in developing, maintaining, troubleshooting, and modernizing production web-based business applications.
+                    </p>
+
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm sm:text-base font-light">
+                        My expertise lies in working with complex business workflows, refactoring legacy codebases, and stabilizing critical production environments. I specialize in designing systems that require thorough analysis, smooth deployments, and minimal to zero disruption to ongoing operational activities.
+                    </p>
+
+                    <div class="pt-6 border-t border-slate-100 dark:border-brand-900/20 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-location-dot text-brand-500 w-5 text-center"></i>
+                            <span>Situbondo, East Java, Indonesia</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-envelope text-brand-500 w-5 text-center"></i>
+                            <a href="mailto:ibnulhusainan@gmail.com" class="hover:text-brand-500 transition-colors">ibnulhusainan@gmail.com</a>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-phone text-brand-500 w-5 text-center"></i>
+                            <a href="tel:+6289639014756" class="hover:text-brand-500 transition-colors">(+62) 896-3901-4756</a>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-graduation-cap text-brand-500 w-5 text-center"></i>
+                            <span>SMKN 1 SUBOH (Computer Engineering)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-20 space-y-4">
+                <span class="text-xs font-bold text-brand-500 dark:text-brand-400 uppercase tracking-widest block">The Journey</span>
+                <h2 class="text-3xl font-extrabold sm:text-4xl text-slate-900 dark:text-white tracking-tight">Work Experience</h2>
+                <div class="w-8 h-1 bg-brand-500 mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Interactive Selector Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+                
+                <!-- Interactive Selector (Left Column) -->
+                <div class="lg:col-span-4 flex flex-col space-y-3 lg:sticky lg:top-28">
+                    <button @click="activeExp = 'freelance'" 
+                            :class="activeExp === 'freelance' ? 'border-brand-500 dark:border-brand-500 bg-brand-50/50 dark:bg-brand-900/10 text-brand-600 dark:text-brand-400' : 'border-slate-200 dark:border-brand-900/20 hover:border-slate-400 dark:hover:border-brand-800'"
+                            class="text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between group">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider block opacity-60">Nov 2019 - Present</span>
+                            <span class="font-bold text-base text-slate-800 dark:text-white group-hover:text-brand-500 transition-colors">Freelance</span>
+                            <span class="text-xs block text-slate-500 dark:text-slate-400">Full Stack Developer</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-brand-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
+                    </button>
+
+                    <button @click="activeExp = 'unichem'" 
+                            :class="activeExp === 'unichem' ? 'border-brand-500 dark:border-brand-500 bg-brand-50/50 dark:bg-brand-900/10 text-brand-600 dark:text-brand-400' : 'border-slate-200 dark:border-brand-900/20 hover:border-slate-400 dark:hover:border-brand-800'"
+                            class="text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between group">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider block opacity-60">Dec 2022 - Dec 2024</span>
+                            <span class="font-bold text-base text-slate-800 dark:text-white group-hover:text-brand-500 transition-colors">PT. Unichemcandi Indonesia</span>
+                            <span class="text-xs block text-slate-500 dark:text-slate-400">Full Stack Developer</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-brand-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
+                    </button>
+
+                    <button @click="activeExp = 'proton'" 
+                            :class="activeExp === 'proton' ? 'border-brand-500 dark:border-brand-500 bg-brand-50/50 dark:bg-brand-900/10 text-brand-600 dark:text-brand-400' : 'border-slate-200 dark:border-brand-900/20 hover:border-slate-400 dark:hover:border-brand-800'"
+                            class="text-left p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between group">
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider block opacity-60">Sep 2011 - Mar 2013</span>
+                            <span class="font-bold text-base text-slate-800 dark:text-white group-hover:text-brand-500 transition-colors">Proton Elektronik</span>
+                            <span class="text-xs block text-slate-500 dark:text-slate-400">IT Support Technician</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-brand-500 opacity-0 group-hover:opacity-100 transition-opacity text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Display Content Area (Right Column) -->
+                <div class="lg:col-span-8 bg-white dark:bg-darkCard rounded-3xl border border-slate-200/60 dark:border-brand-900/30 p-8 sm:p-10 shadow-sm min-h-[400px]">
+                    
+                    <!-- Freelancer -->
+                    <div x-show="activeExp === 'freelance'" x-transition:enter="transition ease-out duration-300" class="space-y-6">
+                        <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-brand-900/10">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Full Stack Developer</h3>
+                                <p class="text-brand-500 font-medium text-sm">Remote & Contract basis</p>
+                            </div>
+                            <span class="px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 font-bold text-xs tracking-wide">
+                                Nov 2019 - Present
+                            </span>
+                        </div>
+
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm font-light">
+                            Designed, modernised, and supported numerous mission-critical internal portals and APIs. Excel in maintaining long-term software ecosystems with minimal disruption to live operations.
+                        </p>
+
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm tracking-wide uppercase">Core Achievements & Work scope:</h4>
+                            <ul class="space-y-3.5 text-slate-600 dark:text-slate-400 text-sm pl-4 list-disc marker:text-brand-500 font-light">
+                                <li>Successfully audited and containerized old native PHP workflows, introducing robust modern MVC frameworks for scalability and long-term security.</li>
+                                <li>Engineered complex API structures (Go Fiber, Express, NestJS) used directly in production and logistics pipelines.</li>
+                                <li>Overhauled slow MySQL query patterns and implemented optimized PostgreSQL partitions to increase transaction speed by up to 40%.</li>
+                                <li>Customized and built extension suites inside complex architectures like WordPress, Opencart, and OSClass.</li>
+                                <li>Advised and worked closely with offshore product owners to craft roadmap architectures, technical guidelines, and server maintenance procedures.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- PT. Unichemcandi Indonesia -->
+                    <div x-show="activeExp === 'unichem'" x-transition:enter="transition ease-out duration-300" class="space-y-6">
+                        <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-brand-900/10">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">Full Stack Developer</h3>
+                                <p class="text-brand-500 font-medium text-sm">PT. UNICHEMCANDI INDONESIA (Refina Brand Salt)</p>
+                            </div>
+                            <span class="px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 font-bold text-xs tracking-wide">
+                                Dec 2022 - Dec 2024
+                            </span>
+                        </div>
+
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm font-light">
+                            PT Unichemcandi Indonesia is a key leader in high-purity refined salt manufacturing in Southeast Asia. I was responsible for modernizing, extending, and debugging critical logistics and supply-chain applications.
+                        </p>
+
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm tracking-wide uppercase">Core Achievements & Work scope:</h4>
+                            <ul class="space-y-3.5 text-slate-600 dark:text-slate-400 text-sm pl-4 list-disc marker:text-brand-500 font-light">
+                                <li>Maintained and enhanced core enterprise system portals responsible for daily factory operations, distribution logs, and load tracking.</li>
+                                <li>Identified, logged, and ironed out critical bugs inside production environments, preventing operational delays.</li>
+                                <li>Engineered internal REST APIs supporting multiple warehouse hardware scanners and local databases.</li>
+                                <li>Maintained SQL databases (MSSQL, MySQL, Sybase), optimizing complex joins to support live visual analytics and reporting tools.</li>
+                                <li>Contributed to transition plans modernizing obsolete software versions into protected server systems.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Proton Elektronik -->
+                    <div x-show="activeExp === 'proton'" x-transition:enter="transition ease-out duration-300" class="space-y-6">
+                        <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100 dark:border-brand-900/10">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900 dark:text-white">IT Support Technician</h3>
+                                <p class="text-brand-500 font-medium text-sm">Proton Elektronik</p>
+                            </div>
+                            <span class="px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 font-bold text-xs tracking-wide">
+                                Sep 2011 - Mar 2013
+                            </span>
+                        </div>
+
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed text-sm font-light">
+                            Managed hardware repair, customer operating system diagnostic support, and corporate office network setups.
+                        </p>
+
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm tracking-wide uppercase">Core Achievements & Work scope:</h4>
+                            <ul class="space-y-3.5 text-slate-600 dark:text-slate-400 text-sm pl-4 list-disc marker:text-brand-500 font-light">
+                                <li>Executed physical repairs and diagnostics on laptop boards, server boxes, desktop rigs, and printer hardware.</li>
+                                <li>Deployed software solutions, system configurations, and driver packages across business workstations.</li>
+                                <li>Assisted corporate and individual walk-in clients with network setups and technical diagnostics.</li>
+                                <li>Recognized for maintaining high customer satisfaction ratings through rapid on-site assistance.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 bg-slate-100/30 dark:bg-brand-900/5 border-y border-slate-200/40 dark:border-brand-900/20 transition-colors duration-500">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14 space-y-4">
+                <span class="text-xs font-bold text-brand-500 dark:text-brand-400 uppercase tracking-widest block">Technical Stack</span>
+                <h2 class="text-3xl font-extrabold sm:text-4xl text-slate-900 dark:text-white tracking-tight">Skills & Tech</h2>
+                <div class="w-8 h-1 bg-brand-500 mx-auto rounded-full"></div>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-light leading-relaxed">
+                    A curated selection of languages, databases, framework suites, and system tools I specialize in using.
+                </p>
+            </div>
+
+            <!-- Category Tabs (Sleek pill design) -->
+            <div class="flex flex-wrap justify-center gap-2 mb-12 max-w-xl mx-auto">
+                <button @click="activeSkillTab = 'all'" :class="activeSkillTab === 'all' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-brand-900/30 hover:border-brand-500'" class="px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300">
+                    All
+                </button>
+                <button @click="activeSkillTab = 'backend'" :class="activeSkillTab === 'backend' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-brand-900/30 hover:border-brand-500'" class="px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300">
+                    Backend
+                </button>
+                <button @click="activeSkillTab = 'frontend'" :class="activeSkillTab === 'frontend' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-brand-900/30 hover:border-brand-500'" class="px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300">
+                    Frontend
+                </button>
+                <button @click="activeSkillTab = 'database'" :class="activeSkillTab === 'database' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-brand-900/30 hover:border-brand-500'" class="px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300">
+                    Database
+                </button>
+                <button @click="activeSkillTab = 'others'" :class="activeSkillTab === 'others' ? 'bg-brand-600 text-white shadow-md shadow-brand-600/10' : 'bg-white dark:bg-darkCard text-slate-600 dark:text-slate-400 border border-slate-200/50 dark:border-brand-900/30 hover:border-brand-500'" class="px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300">
+                    CMS & Tools
+                </button>
+            </div>
+
+            <!-- Dynamic Skills List -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                <template x-for="skill in filteredSkills" :key="skill.name">
+                    <div x-show="skill.category === activeSkillTab || activeSkillTab === 'all'"
+                         x-transition:enter="transition ease-out duration-300 transform"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100"
+                         class="bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm flex items-center space-x-3 hover:border-brand-500 dark:hover:border-brand-500 hover:shadow-md transition-all duration-300 group">
+                        
+                        <div class="text-xl text-slate-400 group-hover:text-brand-500 transition-colors w-10 h-10 rounded-xl bg-slate-50 dark:bg-[#0c121d] flex items-center justify-center">
+                            <i :class="skill.icon"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs sm:text-sm" x-text="skill.name"></h4>
+                            <span class="text-[9px] text-slate-400 font-medium tracking-wider uppercase block mt-0.5" x-text="getCategoryLabel(skill.category)"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </section>
+
+    <!-- Terminal Playground Section -->
+    <section id="terminal" class="py-24">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14 space-y-4">
+                <span class="text-xs font-bold text-brand-500 dark:text-brand-400 uppercase tracking-widest block">Interactive Console</span>
+                <h2 class="text-3xl font-extrabold sm:text-4xl text-slate-900 dark:text-white tracking-tight">Interactive Terminal</h2>
+                <div class="w-8 h-1 bg-brand-500 mx-auto rounded-full"></div>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-light leading-relaxed">
+                    Type Linux-like console shell commands inside the terminal box to query my resume fields interactively.
+                </p>
+            </div>
+
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-darkBg rounded-2xl shadow-2xl border border-brand-900/30 overflow-hidden text-slate-200 font-mono text-xs sm:text-sm leading-relaxed">
+                    <!-- Header -->
+                    <div class="bg-[#050911] px-5 py-3 flex items-center justify-between border-b border-brand-900/20">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 rounded-full bg-[#e06c75]/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#d19a66]/50"></div>
+                            <div class="w-3 h-3 rounded-full bg-[#98c379]/50"></div>
+                        </div>
+                        <span class="text-[10px] font-semibold text-slate-400 tracking-wider">guest@ibnul-husainan.dev: /bin/sh</span>
+                        <div class="text-[10px] text-slate-500">v1.2.0</div>
+                    </div>
+
+                    <!-- Screen Logs -->
+                    <div class="p-6 h-[380px] overflow-y-auto space-y-4" id="terminal-screen" x-ref="terminalScreen">
+                        <div>Welcome to Ibnul Husainan's Terminal Simulator! [Interactive CLI]</div>
+                        <div class="text-slate-400 text-xs">Type <span class="text-brand-400 font-bold underline">help</span> to view all commands.</div>
+                        
+                        <!-- History logs loop -->
+                        <template x-for="(log, idx) in terminalLogs" :key="idx">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-brand-400 font-bold">visitor@terminal:~$</span>
+                                    <span class="text-white font-medium" x-text="log.cmd"></span>
+                                </div>
+                                <div class="text-slate-300 whitespace-pre-wrap pl-3 border-l border-brand-800/30 text-xs" x-html="log.output"></div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Input Box -->
+                    <div class="bg-[#050911] px-6 py-4 border-t border-brand-900/20 flex items-center space-x-2">
+                        <span class="text-brand-400 font-bold shrink-0">visitor@terminal:~$</span>
+                        <input type="text" 
+                               x-model="terminalInput" 
+                               @keydown.enter="executeTerminalCommand()"
+                               placeholder="Type command (e.g., help, about, skills, experience, contact...)" 
+                               class="bg-transparent text-white focus:outline-none w-full border-none p-0 focus:ring-0 select-text font-mono placeholder:text-slate-600 placeholder:text-xs">
+                        <button @click="executeTerminalCommand()" class="text-slate-500 hover:text-brand-400 transition-colors p-1" title="Execute">
+                            <i class="fa-solid fa-play text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-slate-100/30 dark:bg-brand-900/5 border-y border-slate-200/40 dark:border-brand-900/20 transition-colors duration-500">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                
+                <!-- Detail Text (Left Column) -->
+                <div class="lg:col-span-5 space-y-8">
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold text-brand-500 dark:text-brand-400 uppercase tracking-widest block">Connect</span>
+                        <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Let's Discuss Your Next System</h2>
+                        <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-sm font-light">
+                            Do you have a legacy system in need of maintenance, or do you need a highly stable, performant backend build? Drop a message, and let's configure an optimal development strategy.
+                        </p>
+                    </div>
+
+                    <!-- Practical Cards -->
+                    <div class="space-y-4">
+                        <div class="flex items-start space-x-4 bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-[#0c121d] flex items-center justify-center text-brand-500 shrink-0 shadow-inner">
+                                <i class="fa-solid fa-envelope text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 dark:text-white text-xs tracking-wide uppercase">Email Direct</h4>
+                                <a href="mailto:ibnulhusainan@gmail.com" class="text-slate-500 hover:text-brand-500 text-sm transition-colors mt-0.5 block">ibnulhusainan@gmail.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-[#0c121d] flex items-center justify-center text-brand-500 shrink-0 shadow-inner">
+                                <i class="fa-solid fa-phone text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 dark:text-white text-xs tracking-wide uppercase">Call / WhatsApp</h4>
+                                <a href="tel:+6289639014756" class="text-slate-500 hover:text-brand-500 text-sm transition-colors mt-0.5 block">(+62) 896-3901-4756</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4 bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm">
+                            <div class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-[#0c121d] flex items-center justify-center text-brand-500 shrink-0 shadow-inner">
+                                <i class="fa-solid fa-handshake text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-800 dark:text-white text-xs tracking-wide uppercase">Freelance Hubs</h4>
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    <a href="https://projects.id/ibnulhusainan" target="_blank" rel="noopener noreferrer" class="text-[10px] bg-slate-100 dark:bg-brand-900/20 hover:bg-slate-200 dark:hover:bg-brand-900/40 px-3 py-1 rounded-md border border-slate-200 dark:border-brand-800/50 font-bold text-slate-700 dark:text-slate-300 transition-all uppercase">Projects.id</a>
+                                    <a href="https://www.fiverr.com/ibnulhusainan" target="_blank" rel="noopener noreferrer" class="text-[10px] bg-slate-100 dark:bg-brand-900/20 hover:bg-slate-200 dark:hover:bg-brand-900/40 px-3 py-1 rounded-md border border-slate-200 dark:border-brand-800/50 font-bold text-slate-700 dark:text-slate-300 transition-all uppercase">Fiverr</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Card (Right Column) -->
+                <div class="lg:col-span-7 bg-white dark:bg-darkCard p-8 sm:p-10 rounded-3xl border border-slate-200/60 dark:border-brand-900/30 shadow-sm">
+                    <form @submit.prevent="submitContactForm()" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Your Name</label>
+                                <input type="text" x-model="contactForm.name" required class="w-full bg-slate-50 dark:bg-darkBg border border-slate-200 dark:border-brand-900/40 px-4 py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm transition-colors text-slate-900 dark:text-white">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Email Address</label>
+                                <input type="email" x-model="contactForm.email" required class="w-full bg-slate-50 dark:bg-darkBg border border-slate-200 dark:border-brand-900/40 px-4 py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm transition-colors text-slate-900 dark:text-white">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Subject</label>
+                            <input type="text" x-model="contactForm.subject" required class="w-full bg-slate-50 dark:bg-darkBg border border-slate-200 dark:border-brand-900/40 px-4 py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm transition-colors text-slate-900 dark:text-white">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Message Details</label>
+                            <textarea x-model="contactForm.message" rows="5" required class="w-full bg-slate-50 dark:bg-darkBg border border-slate-200 dark:border-brand-900/40 px-4 py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm transition-colors text-slate-900 dark:text-white font-light" placeholder="Explain your legacy pipeline, project requirements, timeline..."></textarea>
+                        </div>
+
+                        <button type="submit" :disabled="formSubmitting" class="w-full py-4 px-6 text-center text-xs font-bold uppercase tracking-wider text-white bg-brand-600 hover:bg-brand-500 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-brand-600/10 disabled:opacity-50">
+                            <span x-show="!formSubmitting" class="flex items-center gap-2">
+                                <i class="fa-solid fa-paper-plane text-xs"></i> Send Message Now
+                            </span>
+                            <span x-show="formSubmitting" class="flex items-center gap-2">
+                                <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg> Transmission ongoing...
+                            </span>
+                        </button>
+
+                        <!-- Feedback Notification Toast -->
+                        <div x-show="toast.show" x-transition:enter="transition ease-out duration-200" class="p-4 rounded-xl text-center text-xs font-bold flex items-center justify-center gap-2 border" :class="toast.type === 'success' ? 'bg-slate-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 border-brand-100 dark:border-brand-900/40' : 'bg-red-50 dark:bg-red-950/20 text-red-600 border-red-100 dark:border-red-900/40'">
+                            <i class="fa-solid" :class="toast.type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'"></i>
+                            <span x-text="toast.message"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#050911] text-slate-400 py-12 border-t border-brand-900/30 transition-colors duration-500">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm shadow">
+                    IH
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold tracking-tight text-white">Ibnul Husainan</span>
+                    <span class="text-[10px] text-slate-500 font-medium">Full Stack Developer</span>
+                </div>
+            </div>
+
+            <div class="text-[11px] text-center sm:text-right font-light tracking-wide space-y-1">
+                <p>© 2026 Ibnul Husainan. All rights reserved.</p>
+                <p class="text-slate-600">Forged with modern HTML5, Tailwind CSS, Alpine.js, & high dedication.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function portfolioApp() {
+            return {
+                darkMode: true, // Defaulting to Dark Mode
+                mobileMenuOpen: false,
+                activeExp: 'freelance',
+                activeSkillTab: 'all',
+                
+                // Forms
+                contactForm: {
+                    name: '',
+                    email: '',
+                    subject: '',
+                    message: ''
+                },
+                formSubmitting: false,
+                toast: {
+                    show: false,
+                    message: '',
+                    type: 'success'
+                },
+
+                // Terminal Shell States
+                terminalInput: '',
+                terminalLogs: [],
+
+                // Consolidated skills dataset mapping back to CV
+                skillsList: [
+                    // Backend
+                    { name: 'PHP (Native)', category: 'backend', icon: 'fa-brands fa-php' },
+                    { name: 'CodeIgniter', category: 'backend', icon: 'fa-solid fa-fire' },
+                    { name: 'Yii2 Framework', category: 'backend', icon: 'fa-solid fa-cubes' },
+                    { name: 'Laravel', category: 'backend', icon: 'fa-brands fa-laravel' },
+                    { name: 'Node.js', category: 'backend', icon: 'fa-brands fa-node-js' },
+                    { name: 'Express.js', category: 'backend', icon: 'fa-solid fa-server' },
+                    { name: 'Nest.js', category: 'backend', icon: 'fa-solid fa-shield-halved' },
+                    { name: 'Go (Fiber)', category: 'backend', icon: 'fa-solid fa-circle-notch' },
+                    { name: 'Goravel', category: 'backend', icon: 'fa-solid fa-terminal' },
+                    // Frontend
+                    { name: 'HTML5', category: 'frontend', icon: 'fa-brands fa-html5' },
+                    { name: 'CSS3', category: 'frontend', icon: 'fa-brands fa-css3-alt' },
+                    { name: 'Tailwind CSS', category: 'frontend', icon: 'fa-brands fa-skyatlas' },
+                    { name: 'Bootstrap', category: 'frontend', icon: 'fa-brands fa-bootstrap' },
+                    { name: 'JavaScript (ES6+)', category: 'frontend', icon: 'fa-brands fa-js' },
+                    { name: 'jQuery', category: 'frontend', icon: 'fa-solid fa-code' },
+                    { name: 'React.js', category: 'frontend', icon: 'fa-brands fa-react' },
+                    { name: 'Next.js', category: 'frontend', icon: 'fa-brands fa-react' },
+                    { name: 'Vue.js', category: 'frontend', icon: 'fa-brands fa-vuejs' },
+                    // Database
+                    { name: 'MySQL', category: 'database', icon: 'fa-solid fa-database' },
+                    { name: 'PostgreSQL', category: 'database', icon: 'fa-solid fa-database' },
+                    { name: 'Microsoft SQL', category: 'database', icon: 'fa-solid fa-database' },
+                    { name: 'Sybase ASE', category: 'database', icon: 'fa-solid fa-database' },
+                    // Tools / CMS
+                    { name: 'WordPress', category: 'others', icon: 'fa-brands fa-wordpress' },
+                    { name: 'OSClass', category: 'others', icon: 'fa-solid fa-store' },
+                    { name: 'OpenCart', category: 'others', icon: 'fa-solid fa-cart-shopping' },
+                    { name: 'Linux OS', category: 'others', icon: 'fa-brands fa-linux' },
+                    { name: 'Git & Github', category: 'others', icon: 'fa-brands fa-github' },
+                ],
+
+                init() {
+                    // Sync default theme configuration
+                    if (this.darkMode) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+
+                    // Welcome command run on start inside terminal console simulator
+                    this.terminalLogs.push({
+                        cmd: 'whoami',
+                        output: 'Ibnul Husainan - Full Stack Developer\nPrimary Fields: Backend Systems, Database Optimization, Legacy Modernization.\nLocation: Situbondo, East Java, Indonesia.\nStatus: Ready for contract / freelancer projects.'
+                    });
+                },
+
+                toggleDarkMode() {
+                    this.darkMode = !this.darkMode;
+                    if (this.darkMode) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                get filteredSkills() {
+                    return this.skillsList;
+                },
+
+                getCategoryLabel(category) {
+                    const labels = {
+                        backend: 'Backend',
+                        frontend: 'Frontend',
+                        database: 'Database',
+                        others: 'CMS & Tools'
+                    };
+                    return labels[category] || category;
+                },
+
+                submitContactForm() {
+                    this.formSubmitting = true;
+                    this.toast.show = false;
+
+                    setTimeout(() => {
+                        this.formSubmitting = false;
+                        this.toast.show = true;
+                        this.toast.type = 'success';
+                        this.toast.message = `Thank you, ${this.contactForm.name}! Your message regarding "${this.contactForm.subject}" has been formatted correctly and sent. I'll get back to you at ${this.contactForm.email} shortly.`;
+                        
+                        // Clear fields
+                        this.contactForm = { name: '', email: '', subject: '', message: '' };
+                    }, 1500);
+                },
+
+                // Interactive Terminal Command Loop Parser (Fully formatted in English)
+                executeTerminalCommand() {
+                    const originalCmd = this.terminalInput.trim();
+                    const cmd = originalCmd.toLowerCase();
+                    if (!cmd) return;
+
+                    let output = '';
+
+                    switch (cmd) {
+                        case 'help':
+                            output = 'Available Commands:\n' +
+                                     '  - <strong class="text-brand-400">about</strong>       : Summary profile introduction.\n' +
+                                     '  - <strong class="text-brand-400">skills</strong>      : Complete list of languages & frameworks.\n' +
+                                     '  - <strong class="text-brand-400">experience</strong>  : Structured history of professional jobs.\n' +
+                                     '  - <strong class="text-brand-400">education</strong>   : Educational degrees details.\n' +
+                                     '  - <strong class="text-brand-400">contact</strong>     : Reachable direct channel links.\n' +
+                                     '  - <strong class="text-brand-400">clear</strong>       : Reset output log history.';
+                            break;
+                        case 'about':
+                            output = '<strong class="text-white">Ibnul Husainan (Full Stack Developer)</strong>\n' +
+                                     'Backend-focused systems engineer with 5+ years of experience in refactoring legacy code,\n' +
+                                     'tuning database engines (MySQL/MSSQL), and creating secure REST APIs using Go, PHP, and NodeJS.';
+                            break;
+                        case 'skills':
+                            output = '<strong class="text-brand-400">Backend:</strong> PHP (Native/CodeIgniter/Yii2/Laravel), Go (Fiber/Goravel), Node.js (Express/Nest.js)\n' +
+                                     '<strong class="text-brand-400">Frontend:</strong> HTML, CSS, Tailwind, Bootstrap, JavaScript ES6+, React, Next.js, Vue, jQuery\n' +
+                                     '<strong class="text-brand-400">Databases:</strong> MySQL, PostgreSQL, MSSQL, Sybase ASE\n' +
+                                     '<strong class="text-brand-400">Tools:</strong> Linux, Git/Github, GitLab, WordPress, OpenCart';
+                            break;
+                        case 'experience':
+                            output = '1. <strong class="text-white">Freelancer - Full Stack Developer (2019 - Present)</strong>\n' +
+                                     '   Legacy migration, stable API architecture development, SQL partition optimizations.\n' +
+                                     '2. <strong class="text-white">PT. UNICHEMCANDI INDONESIA - Full Stack Developer (2022 - 2024)</strong>\n' +
+                                     '   Supported internal logistical modules, debugged production databases, secured REST microservices.\n' +
+                                     '3. <strong class="text-white">Proton Elektronik - IT Support Technician (2011 - 2013)</strong>\n' +
+                                     '   Hardware debugging diagnostics, operating system distribution installs, workstation networking.';
+                            break;
+                        case 'education':
+                            output = '<strong class="text-white">SMKN 1 SUBOH - Computer Engineering</strong>\n' +
+                                     'High School Vocational Program completed: Jul 2008 - May 2011.';
+                            break;
+                        case 'contact':
+                            output = '<strong class="text-white">Direct Communication Details:</strong>\n' +
+                                     '  Email    : ibnulhusainan@gmail.com\n' +
+                                     '  Phone    : (+62) 896-3901-4756\n' +
+                                     '  GitHub   : https://github.com/ibnulhusainan\n' +
+                                     '  LinkedIn : https://www.linkedin.com/in/ibnulhusainan\n' +
+                                     '  Fiverr   : https://www.fiverr.com/ibnulhusainan\n' +
+                                     '  Projects : https://projects.id/ibnulhusainan';
+                            break;
+                        case 'clear':
+                            this.terminalLogs = [];
+                            this.terminalInput = '';
+                            return;
+                        default:
+                            output = `Command not found: <span class="text-red-400">${originalCmd}</span>. Type <span class="text-brand-400 underline">help</span> to view all commands.`;
+                    }
+
+                    this.terminalLogs.push({
+                        cmd: originalCmd,
+                        output: output
+                    });
+
+                    this.terminalInput = '';
+
+                    // Scroll to newest log item
+                    this.$nextTick(() => {
+                        const el = this.$refs.terminalScreen;
+                        el.scrollTop = el.scrollHeight;
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
